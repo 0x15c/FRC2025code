@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.LimelightReader;
 
 // Now we are going to write video streaming codes~
 
@@ -22,6 +23,8 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
+
+  private LimelightReader m_limelightReader;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -48,6 +51,9 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+    m_limelightReader = new LimelightReader();
+    m_limelightReader.postToSmartDashboard();
+    m_limelightReader.reportDistance();
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
@@ -91,6 +97,7 @@ public class Robot extends TimedRobot {
   public void testInit() {
     // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
+    
   }
 
   /** This function is called periodically during test mode. */
