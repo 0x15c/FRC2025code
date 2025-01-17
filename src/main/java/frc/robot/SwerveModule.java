@@ -89,4 +89,10 @@ public class SwerveModule {
             Rotation2d.fromRotations(mAngleMotor.getPosition().getValue())
         );
     }
+    public void diagnosticPrint() {
+        System.out.println("Module " + moduleNumber + 
+                          " CANCoder Raw: " + angleEncoder.getAbsolutePosition().getValue() +
+                          " Offset: " + angleOffset.getRotations() +
+                          " Motor Position: " + mAngleMotor.getPosition().getValue());
+    }
 }

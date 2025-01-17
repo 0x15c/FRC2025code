@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+// import frc.robot.commands.ApriltagAutoAlign;
 import frc.robot.subsystems.LimelightReader;
 
 // Now we are going to write video streaming codes~
@@ -22,6 +23,10 @@ public class Robot extends TimedRobot {
 
   private Command m_autonomousCommand;
 
+  private Command m_teleopCommand;
+
+  private Command m_apriltagautoalign;
+
   private RobotContainer m_robotContainer;
 
   private LimelightReader m_limelightReader;
@@ -35,6 +40,12 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+    m_limelightReader = new LimelightReader();
+    // m_robotContainer.s_Swerve.resetModulesToAbsolute();
+    System.out.println("[module reset]");
+    for(SwerveModule mod : m_robotContainer.s_Swerve.mSwerveMods) {
+      mod.diagnosticPrint();
+   }
   }
 
   /**
@@ -51,9 +62,7 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
-    m_limelightReader = new LimelightReader();
-    m_limelightReader.postToSmartDashboard();
-    m_limelightReader.reportDistance();
+
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
@@ -84,9 +93,15 @@ public class Robot extends TimedRobot {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.cancel();
-    }
+    // if (m_autonomousCommand != null) {
+    //   m_autonomousCommand.cancel();
+    // }
+    m_robotContainer.s_Swerve.removeDefaultCommand();
+    CommandScheduler.getInstance().cancelAll();
+    // m_robotContainer.getTeleopCommand().schedule();;
+    m_teleopCommand = m_robotContainer.getTeleopCommand();
+    m_teleopCommand.schedule();
+    
   }
 
   /** This function is called periodically during operator control. */
@@ -96,11 +111,20 @@ public class Robot extends TimedRobot {
   @Override
   public void testInit() {
     // Cancels all running commands at the start of test mode.
+    m_robotContainer.s_Swerve.removeDefaultCommand();
     CommandScheduler.getInstance().cancelAll();
-    
+    // CommandScheduler.getInstance().run();
+    // m_limelightReader = new LimelightReader();
+    // m_apriltagautoalign = new ApriltagAutoAlign(m_robotContainer.s_Swerve);
+    m_apriltagautoalign = m_robotContainer.getApriltagAutoAlign();
+    m_apriltagautoalign.schedule();
   }
 
   /** This function is called periodically during test mode. */
   @Override
-  public void testPeriodic() {}
+  public void testPeriodic() {
+    m_limelightReader.postToSmartDashboard();
+    m_limelightReader.reportDistance();
+    // m_apriltagautoalign.execute();
+  }
 }

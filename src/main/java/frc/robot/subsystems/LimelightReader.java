@@ -7,6 +7,22 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class LimelightReader {
     NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
     private final String[] entry = { "tx", "ty", "ta" };
+    
+    public class RetDistance {
+        Double dx, dy, d;
+
+        public Double getX() {
+            return dx;
+        }
+
+        public Double getY() {
+            return dy;
+        }
+
+        public Double getD() {
+            return d;
+        }
+    }
 
     public class RetValPretty {
         String tag;
@@ -27,6 +43,8 @@ public class LimelightReader {
         private final double hFOV = 62.235;
         private final double vFOV = 48.697;
 
+        // organization of data
+
         /**
          * We assume target apriltag is orthogonal to the vision field, thus an estimate
          * can be made.
@@ -44,6 +62,15 @@ public class LimelightReader {
             dy = d * Math.tan(ty * (Math.PI / 180));
         }
 
+    }
+
+    public RetDistance getDistance() {
+        RetDistance ret = new RetDistance();
+        CameraTargetDistance distance = new CameraTargetDistance();
+        ret.dx = distance.dx;
+        ret.dy = distance.dy;
+        ret.d = distance.d;
+        return ret;
     }
 
     public void reportDistance() {
