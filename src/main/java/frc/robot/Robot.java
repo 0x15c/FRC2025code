@@ -41,7 +41,7 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
     m_limelightReader = new LimelightReader();
-    // m_robotContainer.s_Swerve.resetModulesToAbsolute();
+    m_robotContainer.s_Swerve.resetModulesToAbsolute();
     System.out.println("[module reset]");
     for(SwerveModule mod : m_robotContainer.s_Swerve.mSwerveMods) {
       mod.diagnosticPrint();
