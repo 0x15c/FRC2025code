@@ -21,6 +21,7 @@ import edu.wpi.first.math.proto.Kinematics.ProtobufMecanumDriveWheelPositions;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.Publisher;
 import edu.wpi.first.networktables.StructArrayPublisher;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -47,7 +48,8 @@ public class Swerve extends SubsystemBase {
             new SwerveModule(2, Constants.Swerve.Mod2.constants),
             new SwerveModule(3, Constants.Swerve.Mod3.constants)
         };
-
+        Timer.delay(1.0);
+        // resetModulesToAbsolute();
         swerveOdometry = new SwerveDriveOdometry(Constants.Swerve.swerveKinematics, getGyroYaw(), getModulePositions());
     }
 
@@ -57,7 +59,7 @@ public class Swerve extends SubsystemBase {
                 fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(
                                     translation.getX(), 
                                     translation.getY(), 
-                                    rotation, 
+                                    rotation,
                                     getHeading()
                                 )
                                 : new ChassisSpeeds(
@@ -131,7 +133,11 @@ public class Swerve extends SubsystemBase {
     public void resetModulesToAbsolute(){
         for(SwerveModule mod : mSwerveMods){
             mod.resetToAbsolute();
+            System.out.println("reset module"+ mod.moduleNumber+" to absolute");
+            Timer.delay(0.25);
         }
+        Timer.delay(0.25);
+        System.out.println("reset modules to absolute");
     }
 
     @Override

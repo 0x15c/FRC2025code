@@ -10,6 +10,7 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.Timer;
 import frc.lib.math.Conversions;
 import frc.lib.util.SwerveModuleConstants;
 
@@ -42,6 +43,8 @@ public class SwerveModule {
         mAngleMotor = new TalonFX(moduleConstants.angleMotorID);
         mAngleMotor.getConfigurator().apply(Robot.ctreConfigs.swerveAngleFXConfig);
         resetToAbsolute();
+        Timer.delay(0.5);
+        System.out.println("Angle motor reset");
 
         /* Drive Motor Config */
         mDriveMotor = new TalonFX(moduleConstants.driveMotorID);
@@ -50,8 +53,9 @@ public class SwerveModule {
     }
 
     public void setDesiredState(SwerveModuleState desiredState, boolean isOpenLoop){
-        desiredState = SwerveModuleState.optimize(desiredState, getState().angle); 
-        mAngleMotor.setControl(anglePosition.withPosition(desiredState.angle.getRotations()));
+        // desiredState = SwerveModuleState.optimize(desiredState, getState().angle); 
+        // mAngleMotor.setControl(anglePosition.withPosition(desiredState.angle.getRotations()));
+        desiredState.optimize(getState().angle);
         setSpeed(desiredState, isOpenLoop);
     }
 
@@ -89,6 +93,7 @@ public class SwerveModule {
             Rotation2d.fromRotations(mAngleMotor.getPosition().getValueAsDouble())
         );
     }
+    // Debug
     public void diagnosticPrint() {
         System.out.println("Module " + moduleNumber + 
                           " CANCoder Raw: " + angleEncoder.getAbsolutePosition().getValue() +
