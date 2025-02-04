@@ -1,6 +1,5 @@
 package frc.robot;
 
-import edu.wpi.first.networktables.Publisher;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
@@ -38,20 +37,16 @@ public class RobotContainer {
     /* Subsystems */
     public final Swerve s_Swerve = new Swerve();
 
+    /* Commands */
+    public final TeleopSwerve m_teleopCommand = new TeleopSwerve(s_Swerve, 
+    () -> -driver.getRawAxis(translationAxis), 
+    () -> driver.getRawAxis(strafeAxis), 
+    () -> driver.getRawAxis(rotationAxis), 
+    () -> robotCentric.getAsBoolean());
+
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
-        // s_Swerve.setDefaultCommand(
-        //     new TeleopSwerve(
-        //         s_Swerve, 
-        //         () -> -driver.getRawAxis(translationAxis), 
-        //         () -> -driver.getRawAxis(strafeAxis), 
-        //         () -> -driver.getRawAxis(rotationAxis), 
-        //         () -> robotCentric.getAsBoolean()
-        //     )
-        // );
-        
-        // Configure the button bindings
         configureButtonBindings();
     }
 
@@ -76,15 +71,7 @@ public class RobotContainer {
         return new exampleAuto(s_Swerve);
     }
     public Command getTeleopCommand() {
-        // s_Swerve.setDefaultCommand(
-            return new TeleopSwerve(
-                s_Swerve, 
-                () -> -driver.getRawAxis(translationAxis), 
-                () -> driver.getRawAxis(strafeAxis), 
-                () -> driver.getRawAxis(rotationAxis), 
-                () -> robotCentric.getAsBoolean()
-            // )
-        );
+        return m_teleopCommand;
     }
     public Command getApriltagAutoAlign() {
         return new ApriltagAutoAlign(s_Swerve);
